@@ -19,7 +19,11 @@ message MountCephResponse {
   string gidMap = 3;
 }
 
-message UmountCephRequest { string mountTarget = 1; }
+message UmountCephRequest {
+  string mountTarget = 1;
+  string uidMap = 2;
+  string gidMap = 3;
+}
 
 message UmountCephResponse { string output = 1; }
 

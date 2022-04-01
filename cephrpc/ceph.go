@@ -2,9 +2,12 @@ package cephrpc
 
 import (
 	"log"
+	"os"
 
+	"github.com/gogo/status"
 	"github.com/zv0n/ceph-proxy/ceph"
 	"golang.org/x/net/context"
+	codes "google.golang.org/grpc/codes"
 )
 
 type Server struct {
@@ -32,6 +35,14 @@ func (s *Server) UmountCeph(ctx context.Context, request *UmountCephRequest) (*U
 	err := ceph.Umount(request.MountTarget)
 	if err != nil {
 		return &UmountCephResponse{Output: err.Error()}, err
+	}
+	err = os.Remove(request.UidMap)
+	if err != nil {
+		return &UmountCephResponse{Output: err.Error()}, status.Error(codes.Internal, err.Error())
+	}
+	err = os.Remove(request.GidMap)
+	if err != nil {
+		return &UmountCephResponse{Output: err.Error()}, status.Error(codes.Internal, err.Error())
 	}
 	return &UmountCephResponse{Output: "Success"}, nil
 }
