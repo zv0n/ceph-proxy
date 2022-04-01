@@ -125,6 +125,8 @@ type MountCephResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Output string `protobuf:"bytes,1,opt,name=output,proto3" json:"output,omitempty"`
+	UidMap string `protobuf:"bytes,2,opt,name=uidMap,proto3" json:"uidMap,omitempty"`
+	GidMap string `protobuf:"bytes,3,opt,name=gidMap,proto3" json:"gidMap,omitempty"`
 }
 
 func (x *MountCephResponse) Reset() {
@@ -166,6 +168,114 @@ func (x *MountCephResponse) GetOutput() string {
 	return ""
 }
 
+func (x *MountCephResponse) GetUidMap() string {
+	if x != nil {
+		return x.UidMap
+	}
+	return ""
+}
+
+func (x *MountCephResponse) GetGidMap() string {
+	if x != nil {
+		return x.GidMap
+	}
+	return ""
+}
+
+type UmountCephRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	MountTarget string `protobuf:"bytes,1,opt,name=mountTarget,proto3" json:"mountTarget,omitempty"`
+}
+
+func (x *UmountCephRequest) Reset() {
+	*x = UmountCephRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ceph_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UmountCephRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UmountCephRequest) ProtoMessage() {}
+
+func (x *UmountCephRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ceph_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UmountCephRequest.ProtoReflect.Descriptor instead.
+func (*UmountCephRequest) Descriptor() ([]byte, []int) {
+	return file_ceph_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UmountCephRequest) GetMountTarget() string {
+	if x != nil {
+		return x.MountTarget
+	}
+	return ""
+}
+
+type UmountCephResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Output string `protobuf:"bytes,1,opt,name=output,proto3" json:"output,omitempty"`
+}
+
+func (x *UmountCephResponse) Reset() {
+	*x = UmountCephResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ceph_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UmountCephResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UmountCephResponse) ProtoMessage() {}
+
+func (x *UmountCephResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ceph_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UmountCephResponse.ProtoReflect.Descriptor instead.
+func (*UmountCephResponse) Descriptor() ([]byte, []int) {
+	return file_ceph_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UmountCephResponse) GetOutput() string {
+	if x != nil {
+		return x.Output
+	}
+	return ""
+}
+
 var File_ceph_proto protoreflect.FileDescriptor
 
 var file_ceph_proto_rawDesc = []byte{
@@ -184,17 +294,31 @@ var file_ceph_proto_rawDesc = []byte{
 	0x12, 0x1a, 0x0a, 0x08, 0x67, 0x69, 0x64, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x18, 0x06, 0x20, 0x01,
 	0x28, 0x03, 0x52, 0x08, 0x67, 0x69, 0x64, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x12, 0x1c, 0x0a, 0x09,
 	0x67, 0x69, 0x64, 0x52, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52,
-	0x09, 0x67, 0x69, 0x64, 0x52, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x22, 0x2b, 0x0a, 0x11, 0x4d, 0x6f,
+	0x09, 0x67, 0x69, 0x64, 0x52, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x22, 0x5b, 0x0a, 0x11, 0x4d, 0x6f,
 	0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
 	0x16, 0x0a, 0x06, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x06, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x32, 0x54, 0x0a, 0x0c, 0x4d, 0x6f, 0x75, 0x6e, 0x74,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x44, 0x0a, 0x09, 0x4d, 0x6f, 0x75, 0x6e, 0x74,
-	0x43, 0x65, 0x70, 0x68, 0x12, 0x19, 0x2e, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x2e, 0x4d,
-	0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x1a, 0x2e, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x2e, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x43,
-	0x65, 0x70, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0c, 0x5a,
-	0x0a, 0x2e, 0x2f, 0x3b, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x06, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x69, 0x64, 0x4d, 0x61,
+	0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x69, 0x64, 0x4d, 0x61, 0x70, 0x12,
+	0x16, 0x0a, 0x06, 0x67, 0x69, 0x64, 0x4d, 0x61, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x06, 0x67, 0x69, 0x64, 0x4d, 0x61, 0x70, 0x22, 0x35, 0x0a, 0x11, 0x55, 0x6d, 0x6f, 0x75, 0x6e,
+	0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x0b,
+	0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0b, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x22, 0x2c,
+	0x0a, 0x12, 0x55, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x32, 0x9d, 0x01, 0x0a,
+	0x0c, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x44, 0x0a,
+	0x09, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x12, 0x19, 0x2e, 0x63, 0x65, 0x70,
+	0x68, 0x72, 0x70, 0x63, 0x2e, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x2e,
+	0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x12, 0x47, 0x0a, 0x0a, 0x55, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65, 0x70,
+	0x68, 0x12, 0x1a, 0x2e, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x2e, 0x55, 0x6d, 0x6f, 0x75,
+	0x6e, 0x74, 0x43, 0x65, 0x70, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e,
+	0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x2e, 0x55, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x43, 0x65,
+	0x70, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0c, 0x5a, 0x0a,
+	0x2e, 0x2f, 0x3b, 0x63, 0x65, 0x70, 0x68, 0x72, 0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -209,16 +333,20 @@ func file_ceph_proto_rawDescGZIP() []byte {
 	return file_ceph_proto_rawDescData
 }
 
-var file_ceph_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_ceph_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ceph_proto_goTypes = []interface{}{
-	(*MountCephRequest)(nil),  // 0: cephrpc.MountCephRequest
-	(*MountCephResponse)(nil), // 1: cephrpc.MountCephResponse
+	(*MountCephRequest)(nil),   // 0: cephrpc.MountCephRequest
+	(*MountCephResponse)(nil),  // 1: cephrpc.MountCephResponse
+	(*UmountCephRequest)(nil),  // 2: cephrpc.UmountCephRequest
+	(*UmountCephResponse)(nil), // 3: cephrpc.UmountCephResponse
 }
 var file_ceph_proto_depIdxs = []int32{
 	0, // 0: cephrpc.MountService.MountCeph:input_type -> cephrpc.MountCephRequest
-	1, // 1: cephrpc.MountService.MountCeph:output_type -> cephrpc.MountCephResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: cephrpc.MountService.UmountCeph:input_type -> cephrpc.UmountCephRequest
+	1, // 2: cephrpc.MountService.MountCeph:output_type -> cephrpc.MountCephResponse
+	3, // 3: cephrpc.MountService.UmountCeph:output_type -> cephrpc.UmountCephResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -254,6 +382,30 @@ func file_ceph_proto_init() {
 				return nil
 			}
 		}
+		file_ceph_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UmountCephRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ceph_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UmountCephResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -261,7 +413,7 @@ func file_ceph_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ceph_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -288,6 +440,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MountServiceClient interface {
 	MountCeph(ctx context.Context, in *MountCephRequest, opts ...grpc.CallOption) (*MountCephResponse, error)
+	UmountCeph(ctx context.Context, in *UmountCephRequest, opts ...grpc.CallOption) (*UmountCephResponse, error)
 }
 
 type mountServiceClient struct {
@@ -307,9 +460,19 @@ func (c *mountServiceClient) MountCeph(ctx context.Context, in *MountCephRequest
 	return out, nil
 }
 
+func (c *mountServiceClient) UmountCeph(ctx context.Context, in *UmountCephRequest, opts ...grpc.CallOption) (*UmountCephResponse, error) {
+	out := new(UmountCephResponse)
+	err := c.cc.Invoke(ctx, "/cephrpc.MountService/UmountCeph", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MountServiceServer is the server API for MountService service.
 type MountServiceServer interface {
 	MountCeph(context.Context, *MountCephRequest) (*MountCephResponse, error)
+	UmountCeph(context.Context, *UmountCephRequest) (*UmountCephResponse, error)
 }
 
 // UnimplementedMountServiceServer can be embedded to have forward compatible implementations.
@@ -318,6 +481,9 @@ type UnimplementedMountServiceServer struct {
 
 func (*UnimplementedMountServiceServer) MountCeph(context.Context, *MountCephRequest) (*MountCephResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MountCeph not implemented")
+}
+func (*UnimplementedMountServiceServer) UmountCeph(context.Context, *UmountCephRequest) (*UmountCephResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UmountCeph not implemented")
 }
 
 func RegisterMountServiceServer(s *grpc.Server, srv MountServiceServer) {
@@ -342,6 +508,24 @@ func _MountService_MountCeph_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MountService_UmountCeph_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UmountCephRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MountServiceServer).UmountCeph(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cephrpc.MountService/UmountCeph",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MountServiceServer).UmountCeph(ctx, req.(*UmountCephRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _MountService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "cephrpc.MountService",
 	HandlerType: (*MountServiceServer)(nil),
@@ -349,6 +533,10 @@ var _MountService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MountCeph",
 			Handler:    _MountService_MountCeph_Handler,
+		},
+		{
+			MethodName: "UmountCeph",
+			Handler:    _MountService_UmountCeph_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

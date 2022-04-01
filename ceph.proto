@@ -4,19 +4,26 @@ package cephrpc;
 option go_package = "./;cephrpc";
 
 message MountCephRequest {
-    string client = 1;
-    string mountSource = 2;
-    string mountTarget = 3;
-    int64 uidLocal = 4;
-    int64 uidRemote = 5;
-    int64 gidLocal = 6;
-    int64 gidRemote = 7;
+  string client = 1;
+  string mountSource = 2;
+  string mountTarget = 3;
+  int64 uidLocal = 4;
+  int64 uidRemote = 5;
+  int64 gidLocal = 6;
+  int64 gidRemote = 7;
 }
 
 message MountCephResponse {
-	string output = 1;
+  string output = 1;
+  string uidMap = 2;
+  string gidMap = 3;
 }
 
+message UmountCephRequest { string mountTarget = 1; }
+
+message UmountCephResponse { string output = 1; }
+
 service MountService {
-	rpc MountCeph(MountCephRequest) returns (MountCephResponse) {};
+  rpc MountCeph(MountCephRequest) returns (MountCephResponse) {};
+  rpc UmountCeph(UmountCephRequest) returns (UmountCephResponse) {};
 }

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/golang/glog"
+	"k8s.io/utils/mount"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -23,14 +24,36 @@ type MountInput struct {
 	GidRemote  int64
 }
 
-func Mount(input MountInput) error {
-	uidMap, e := writeIDMapping(input.UidLocal, input.UidRemote)
-	if e != nil {
-		return e
+func Umount(targetPath string) error {
+	notMnt, err := mount.New("").IsLikelyNotMountPoint(targetPath)
+
+	if err != nil {
+		if os.IsNotExist(err) {
+			return status.Error(codes.NotFound, "Targetpath not found")
+		} else {
+			return status.Error(codes.Internal, err.Error())
+		}
 	}
-	gidMap, e := writeIDMapping(input.GidLocal, input.GidRemote)
-	if e != nil {
-		return e
+	if notMnt {
+		return status.Error(codes.NotFound, "Volume not mounted")
+	}
+
+	err = mount.New("").Unmount(targetPath)
+	if err != nil {
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	return nil
+}
+
+func Mount(input MountInput) (err error, uidMap string, gidMap string) {
+	uidMap, err = writeIDMapping(input.UidLocal, input.UidRemote)
+	if err != nil {
+		return err, "", ""
+	}
+	gidMap, err = writeIDMapping(input.GidLocal, input.GidRemote)
+	if err != nil {
+		return err, "", ""
 	}
 
 	mountCmd := "ceph-fuse"
@@ -53,9 +76,9 @@ func Mount(input MountInput) error {
 	)
 
 	// create target, os.Mkdirall is noop if it exists
-	err := os.MkdirAll(input.TargetPath, 0750)
+	err = os.MkdirAll(input.TargetPath, 0750)
 	if err != nil {
-		return err
+		return err, "", ""
 	}
 
 	glog.Infof("executing mount command cmd=%s, args=%s", mountCmd, mountArgs)
@@ -63,10 +86,10 @@ func Mount(input MountInput) error {
 	out, err := exec.Command(mountCmd, mountArgs...).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("mounting failed: %v cmd: '%s %s' output: %q",
-			err, mountCmd, strings.Join(mountArgs, " "), string(out))
+			err, mountCmd, strings.Join(mountArgs, " "), string(out)), "", ""
 	}
 
-	return nil
+	return nil, uidMap, gidMap
 }
 
 func writeIDMapping(local int64, remote int64) (string, error) {

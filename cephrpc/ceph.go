@@ -11,8 +11,8 @@ type Server struct {
 }
 
 func (s *Server) MountCeph(ctx context.Context, request *MountCephRequest) (*MountCephResponse, error) {
-	log.Printf("Received request from client: client => \"%s\"; source => \"%s\"; target => \"%s\"; localUID => %d; remoteUID => %d; localGID => %d; remoteGID => %d", request.Client, request.MountSource, request.MountTarget, request.UidLocal, request.UidRemote, request.GidLocal, request.GidRemote)
-	err := ceph.Mount(ceph.MountInput{
+	log.Printf("Received mount request from client: client => \"%s\"; source => \"%s\"; target => \"%s\"; localUID => %d; remoteUID => %d; localGID => %d; remoteGID => %d", request.Client, request.MountSource, request.MountTarget, request.UidLocal, request.UidRemote, request.GidLocal, request.GidRemote)
+	err, uidMap, gidMap := ceph.Mount(ceph.MountInput{
 		Client:     request.Client,
 		SourcePath: request.MountSource,
 		TargetPath: request.MountTarget,
@@ -22,7 +22,16 @@ func (s *Server) MountCeph(ctx context.Context, request *MountCephRequest) (*Mou
 		GidRemote:  request.GidRemote,
 	})
 	if err != nil {
-		return &MountCephResponse{Output: "ERROR"}, err
+		return &MountCephResponse{Output: err.Error(), UidMap: "", GidMap: ""}, err
 	}
-	return &MountCephResponse{Output: "Success"}, nil
+	return &MountCephResponse{Output: "Success", UidMap: uidMap, GidMap: gidMap}, nil
+}
+
+func (s *Server) UmountCeph(ctx context.Context, request *UmountCephRequest) (*UmountCephResponse, error) {
+	log.Printf("Received umount request from client: target => %s", request.MountTarget)
+	err := ceph.Umount(request.MountTarget)
+	if err != nil {
+		return &UmountCephResponse{Output: err.Error()}, err
+	}
+	return &UmountCephResponse{Output: "Success"}, nil
 }
