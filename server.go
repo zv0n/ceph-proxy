@@ -6,22 +6,30 @@ import (
 	"os"
 
 	"github.com/zv0n/ceph-proxy/cephrpc"
+	"github.com/zv0n/ceph-proxy/configuration"
 	"google.golang.org/grpc"
 )
 
+const configPath = "/etc/ceph-proxy.conf"
+
 func main() {
-	// TODO configurable
-	socketaddr := "/tmp/ceph-proxy.sock"
-	listener, err := net.Listen("unix", socketaddr)
+	config, err := configuration.ParseConfigFile(configPath)
+	if err != nil && !os.IsNotExist(err) {
+		log.Fatalf("Could not read config file: \"%s\" - %v", configPath, err)
+	}
+
+	if err := os.Remove(config.SocketPath); err != nil && !os.IsNotExist(err) {
+		log.Fatalf("Failed to remove %s, error: %s", config.SocketPath, err.Error())
+	}
+
+	listener, err := net.Listen("unix", config.SocketPath)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	if err := os.Remove(socketaddr); err != nil && !os.IsNotExist(err) {
-		log.Fatalf("Failed to remove %s, error: %s", socketaddr, err.Error())
+	cephServer := cephrpc.Server{
+		Config: config,
 	}
-
-	cephServer := cephrpc.Server{}
 
 	grpcServer := grpc.NewServer()
 

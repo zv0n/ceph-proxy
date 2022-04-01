@@ -3,11 +3,12 @@ package ceph
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 
-	"github.com/golang/glog"
+	"github.com/zv0n/ceph-proxy/configuration"
 	"k8s.io/utils/mount"
 
 	"google.golang.org/grpc/codes"
@@ -46,7 +47,7 @@ func Umount(targetPath string) error {
 	return nil
 }
 
-func Mount(input MountInput) (err error, uidMap string, gidMap string) {
+func Mount(input MountInput, config *configuration.Configuration) (err error, uidMap string, gidMap string) {
 	uidMap, err = writeIDMapping(input.UidLocal, input.UidRemote)
 	if err != nil {
 		return err, "", ""
@@ -61,8 +62,8 @@ func Mount(input MountInput) (err error, uidMap string, gidMap string) {
 
 	// TODO maybe make conf/keyring configurable through some sort of conf file
 	clientName := fmt.Sprintf("client.%s", input.Client)
-	configPath := fmt.Sprintf("/clients/conf/%s.conf", input.Client)
-	keyringPath := fmt.Sprintf("/clients/keyring/%s.keyring", input.Client)
+	configPath := fmt.Sprintf("%s/%s.conf", config.ClientConfPath, input.Client)
+	keyringPath := fmt.Sprintf("%s/%s.keyring", config.ClientKeyringPath, input.Client)
 	mountArgs = append(
 		mountArgs,
 		"-n", clientName,
@@ -81,7 +82,7 @@ func Mount(input MountInput) (err error, uidMap string, gidMap string) {
 		return err, "", ""
 	}
 
-	glog.Infof("executing mount command cmd=%s, args=%s", mountCmd, mountArgs)
+	log.Printf("executing mount command cmd=%s, args=%s", mountCmd, mountArgs)
 
 	out, err := exec.Command(mountCmd, mountArgs...).CombinedOutput()
 	if err != nil {

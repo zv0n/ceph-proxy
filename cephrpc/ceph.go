@@ -6,11 +6,13 @@ import (
 
 	"github.com/gogo/status"
 	"github.com/zv0n/ceph-proxy/ceph"
+	"github.com/zv0n/ceph-proxy/configuration"
 	"golang.org/x/net/context"
 	codes "google.golang.org/grpc/codes"
 )
 
 type Server struct {
+	Config *configuration.Configuration
 }
 
 func (s *Server) MountCeph(ctx context.Context, request *MountCephRequest) (*MountCephResponse, error) {
@@ -23,7 +25,7 @@ func (s *Server) MountCeph(ctx context.Context, request *MountCephRequest) (*Mou
 		UidRemote:  request.UidRemote,
 		GidLocal:   request.GidLocal,
 		GidRemote:  request.GidRemote,
-	})
+	}, s.Config)
 	if err != nil {
 		return &MountCephResponse{Output: err.Error(), UidMap: "", GidMap: ""}, err
 	}
